@@ -19,7 +19,7 @@
 #' @export
 getDistrict=function(n_province=NULL,id=NULL){
   path=getPathProvince(n_province,id)
-  data=jsonlite::read_json(path)
+  data=jsonlite::read_json(utils::unzip(path[1],path[2]))
   nbr_dist=length(data["Data"][[1]])
   prov_fr=c()
   prov_ar=c()
@@ -112,20 +112,18 @@ getMultiDistrict=function(n_province=NULL,id=NULL){
 #' @param id  id of region
 #' @noRd
 getPathProvince=function(n_province=NULL,id=NULL){
+  path=system.file("extdata", "extdata.zip", package = "geomaroc")
   if (is.null(n_province) & !is.null(id)){
     if (is.numeric(id)){
-      path_p=system.file("extdata", "prov_id.json", package = "geomaroc")
-      ids=jsonlite::read_json(path_p)
+      ids=jsonlite::read_json(utils::unzip(path,"prov_id.json"))
       n_province=names(which(ids==id))}
     else {
       print("id must be an integer")
     }
   }
-  path=system.file("extdata", "prov_region.json", package = "geomaroc")
-  n_region=jsonlite::read_json(path)[n_province][[1]]
+  n_region=jsonlite::read_json(utils::unzip(path,"prov_region.json"))[n_province][[1]]
   short_path=paste(n_region,"/",n_province,".json",sep = "")
-  path=system.file("extdata", short_path, package = "geomaroc")
-  return(path)
+  return(c(path,short_path))
 }
 
 

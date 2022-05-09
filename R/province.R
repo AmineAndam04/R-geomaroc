@@ -20,7 +20,7 @@
 #'
 getProvince=function(n_region=NULL,id=NULL){
   path=getPathRegion(n_region,id)
-  data=jsonlite::read_json(path)
+  data=jsonlite::read_json(utils::unzip(path[1],path[2]))
   nbr_prov=length(data["Data"][[1]])
   libelle_ar=c()
   libelle_fr=c()
@@ -92,17 +92,16 @@ getMultiProvince=function(n_region=NULL,id=NULL){
 #' @param id  id of region
 #'
 getPathRegion=function(n_region=NULL,id=NULL){
+  path=system.file("extdata", "extdata.zip", package = "geomaroc")
   if (is.null(n_region) & !is.null(id)){
     if (is.numeric(id)){
-      path_p=system.file("extdata", "region_id.json", package = "geomaroc")
-      ids=jsonlite::read_json(path_p)
+      ids=jsonlite::read_json(utils::unzip(path,"region_id.json"))
       n_region=names(which(ids==id))}
     else {
       print("id must be an integer")
     }
   }
   short_path=paste("region/",n_region,".json",sep = "")
-  path=system.file("extdata", short_path, package = "geomaroc")
-  return(path)
+  return(c(path,short_path))
 }
 

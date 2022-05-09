@@ -8,8 +8,8 @@
 #' @export
 #'
 regions=function(){
-  path=system.file("extdata", "region_id.json", package = "geomaroc")
-  id=jsonlite::read_json(path)
+  path=system.file("extdata", "extdata.zip", package = "geomaroc")
+  id=jsonlite::read_json(utils::unzip(path,"region_id.json"))
   id=data.frame(unlist(id))
   return(id)
 }
@@ -24,8 +24,8 @@ regions=function(){
 #' @export
 #'
 provinces=function(){
-  path_p=system.file("extdata", "region_prov.json", package = "geomaroc")
-  id=jsonlite::read_json(path_p)
+  path=system.file("extdata", "extdata.zip", package = "geomaroc")
+  id=jsonlite::read_json(utils::unzip(path,"region_prov.json"))
   regs=names(id)
   Region=c()
   Province=c()

@@ -20,12 +20,11 @@
 #' @export
 #'
 getRegion=function(name=NULL,id=NULL){
-  path=system.file("extdata", "Maroc.json", package = "geomaroc")
-  data=jsonlite::read_json(path)
+  path=system.file("extdata", "extdata.zip", package = "geomaroc")
+  data=jsonlite::read_json(utils::unzip(path,"Maroc.json"))
   if (is.null(name) & !is.null(id)){
     if (is.numeric(id)){
-    path_p=system.file("extdata", "region_id.json", package = "geomaroc")
-    ids=jsonlite::read_json(path_p)
+    ids=jsonlite::read_json(utils::unzip(path,"region_id.json"))
     name=names(which(ids==id))}
     else {
       print("id must be an integer")
@@ -66,8 +65,6 @@ getRegion=function(name=NULL,id=NULL){
 #' @export
 #'
 getMultiRegion=function(name=NULL,id=NULL){
-  path=system.file("extdata", "Maroc.json", package = "geomaroc")
-  data=jsonlite::read_json(path)
   df=sf::st_sfc()
   if (!is.null(name)){
   for (reg in name){
