@@ -1,4 +1,4 @@
-# Welcome to geomaroc
+# Welcome to the R version of  geomaroc
 
 ![geomaroc_logo](https://user-images.githubusercontent.com/49843367/164335838-537f0514-ce89-43ed-956f-c6c6de6ed264.png)
 
@@ -12,6 +12,7 @@
 Visit [This Repo](https://github.com/AmineAndam04/R-geomaroc)
 ## Install
 Install geomaroc and geomarocdata
+
 1- Install geomaroc :
 ```{r}
 install.packages("geomaroc")
