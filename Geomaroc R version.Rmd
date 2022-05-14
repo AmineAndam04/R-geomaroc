@@ -1,0 +1,298 @@
+---
+title: "Geomaroc R version"
+output: html_notebook
+---
+
+
+*install geomaroc and geomarocdata*
+```{r}
+#install.packages("geomaroc")
+##OR
+#install.packages("C:/Users/pc/Downloads/geomaroc_0.1.1.tar.gz", repos = NULL, type = "source")
+##install geomarocdata
+#install.packages('geomarocdata',repos='https://amineandam04.github.io/drat/', type='source')
+```
+
+```{r}
+library(geomaroc)
+library(ggplot2)
+library(readxl)
+```
+
+**First, we plot the population of Morocco by region**
+
+Step1 : Import data
+```{r}
+popByRegion=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx","Region")
+head(popByRegion)
+```
+
+
+Step 2 : Use geomaroc to get the coordinates of  regions to plot
+```{r}
+#Get the coordinates of each region
+coordRegion=getMultiRegion(id=c(1:12))
+#Merge population data and coordinates
+popByRegion= sf::st_sf(merge(popByRegion,coordRegion,by.x = "Region",by.y = "libelle_fr"))
+```
+
+Step 3 : Generate the plot using ggplot
+```{r}
+
+options(repr.plot.width=1,reper.plot.heigth=0.75)
+ggplot(data = popByRegion, aes(fill = Population)) + 
+  geom_sf() + 
+  #scale_fill_viridis_c(option = "plasma") +
+  scale_fill_viridis_c(trans = "sqrt", alpha = .4) +
+  #scale_fill_viridis_c(option = "C")+
+  geom_sf_text(
+    data = popByRegion,
+    aes(label = Region),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  #scale_fill_continuous(name="Population(millions)", 
+            #low = "lightgreen", high = "darkgreen",limits = c(0,8), 
+            #breaks=c(1,2,3,4,5,6,7), na.value = "grey50") +
+  labs(title = "  Population of Moroccon  by region, 2014",
+       caption = "Data source: HCP",
+       fill = "Population") + 
+  theme_void()
+```
+
+**Now we plot the population of provinces within a region**
+
+**Region: Tanger-Tetouan-Al-Hoceima**
+
+```{r}
+poptanj=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx",3)
+head(poptanj)
+#Get the coordinates of Tanger-Tetouan-Al-Hoceima
+coordRegion=getProvince("Tanger-Tetouan-Al-Hoceima")
+#Merge population data and coordinates
+poptanj= sf::st_sf(merge(poptanj,coordRegion,by.x = "Province",by.y = "libelle_fr"))
+```
+
+```{r}
+library(rcartocolor)
+ggplot() + 
+  geom_sf(data = poptanj, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "Mint") +
+  theme_void() +
+  geom_sf_text(
+    data = poptanj,
+    aes(label = Province),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population of Tanjer-Tetouan-Al-Hoceima, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+```
+
+**Region: Rabat-Sale-Kenitra**
+
+```{r}
+popRabat=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx",1)
+head(popRabat)
+#Get the coordinates of Rabat-Sale-Kenitra
+coordRegion=getProvince("Rabat-Sale-Kenitra")
+#Merge population data and coordinates
+popRabat= sf::st_sf(merge(popRabat,coordRegion,by.x = "Province",by.y = "libelle_fr"))
+```
+```{r}
+ggplot() + 
+  geom_sf(data = popRabat, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "Sunset") +
+  theme_void() +
+  geom_sf_text(
+    data = popRabat,
+    aes(label = Province),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population of Rabat-Sale-Kenitra, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+  
+```
+
+**Region : Casablanca-Settat**
+
+```{r}
+popCasa=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx",5)
+head(popCasa)
+#Get the coordinates of Casablanca-Settat
+coordRegion=getProvince("Casablanca-Settat")
+#Merge population data and coordinates
+popCasa= sf::st_sf(merge(popCasa,coordRegion,by.x = "Province",by.y = "libelle_fr"))
+```
+
+```{r}
+ggplot() + 
+  geom_sf(data = popCasa, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "TealGrn") +
+  theme_void() +
+  geom_sf_text(
+    data = popCasa,
+    aes(label = Province),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population Casablanca-Settat, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+  
+```
+
+**Region: Fes-Meknes**
+```{r}
+popfes=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx","FesMeknes")
+head(popfes)
+#Get the coordinates of Fes-Meknes
+coordRegion=getProvince("Fes-Meknes")
+#Merge population data and coordinates
+popfes= sf::st_sf(merge(popfes,coordRegion,by.x = "Province",by.y = "libelle_fr"))
+```
+
+```{r}
+ggplot() + 
+  geom_sf(data = popfes, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "Tropic") +
+  theme_void() +
+  geom_sf_text(
+    data = popfes,
+    aes(label = Province),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population of Fes-Meknes, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+  
+```
+
+**Region : Oriental**
+```{r}
+poport=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx","Oriental")
+head(poport)
+#Get the coordinates of Oriental
+coordRegion=getProvince("Oriental")
+#Merge population data and coordinates
+poport= sf::st_sf(merge(poport,coordRegion,by.x = "Province",by.y = "libelle_fr"))
+```
+
+
+```{r}
+ggplot() + 
+  geom_sf(data = poport, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "Fall") +
+  theme_void() +
+  geom_sf_text(
+    data = poport,
+    aes(label = Province),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population of Oriental, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+  
+```
+**Region :Laayoune-Sakia-El-Hamra**
+
+```{r}
+poplay=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx","Laayoun")
+head(poplay)
+#Get the coordinates of Laayoune-Sakia-El-Hamra
+coordRegion=getProvince("Laayoune-Sakia-El-Hamra")
+#Merge population data and coordinates
+poplay= sf::st_sf(merge(poplay,coordRegion,by.x = "Province",by.y = "libelle_fr"))
+```
+
+```{r}
+ggplot() + 
+  geom_sf(data = poplay, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "BrwnYl") +
+  theme_void() +
+  geom_sf_text(
+    data = poplay,
+    aes(label = Province),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population of Laayoune-Sakia-El-Hamra, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+```
+
+**Now we plot the population of districts within a province**
+
+**Province: Casablanca**
+```{r}
+popcasab=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx","Casa")
+head(popcasab)
+#Get the coordinates of Casablanca
+coordRegion=getDistrict("Casablanca")
+#Merge population data and coordinates
+popcasab= sf::st_sf(merge(popcasab,coordRegion,by.x = "District",by.y = "libelle_fr"))
+```
+
+```{r}
+ggplot() + 
+  geom_sf(data = popcasab, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "Mint") +
+  theme_void() +
+  geom_sf_text(
+    data = popcasab,
+    aes(label = District),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population of Casablanca's districts, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+  
+```
+
+**Province: Tanger-Assilah**
+```{r}
+poptanjs=read_excel("C:/Users/pc/Desktop/MoroccoMap/geo_example.xlsx","Tanger-assilah")
+head(poptanjs)
+#Get the coordinates of Tanger-Assilah
+coordRegion=getDistrict("Tanger-Assilah")
+#Merge population data and coordinates
+poptanjs= sf::st_sf(merge(poptanjs,coordRegion,by.x = "District",by.y = "libelle_fr"))
+```
+
+```{r}
+ggplot() + 
+  geom_sf(data = poptanjs, aes(fill = Population)) +
+  scale_fill_carto_c(palette = "OrYel") +
+  theme_void() +
+  geom_sf_text(
+    data = poptanjs,
+    aes(label = District),
+    check_overlap = TRUE,
+    size = 3,
+    color = "black",fontface = "bold")+
+  labs(title = "  Population of Tanger Assilah's districts, 2014",
+       caption = "Data source: HCP",
+       fill = "Population")
+  
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
