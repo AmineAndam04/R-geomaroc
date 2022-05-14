@@ -25,6 +25,9 @@ install.packages(".../Downloads/geomaroc_0.1.1.tar.gz", repos = NULL, type = "so
 ```{r}
 install.packages('geomarocdata',repos='https://amineandam04.github.io/drat/', type='source')
 ```
+## Documentation
+[Reference manual](https://cran.r-project.org/web/packages/geomaroc/geomaroc.pdf)
+
 ## Notation 
 To get the notation use : regions() & provinces
 ## Examples :
