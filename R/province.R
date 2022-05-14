@@ -7,20 +7,19 @@
 #' @return return a sf object
 #'
 #' @examples
-#' ##Examples of simple plots
-#' ##Use region name
-#' #region=getProvince("Tanger-Tetouan-Al-Hoceima")
-#' #region
-#' #plot(region$coordinates)
-#' ##Use id
-#' ##Don't forget to write getRegion(id=1) not getRegion(1)
-#' #region=getProvince(id=1)
-#' #plot(region$coordinates)
+#' \dontrun{
+#' #Use region name
+#' region=getProvince("Tanger-Tetouan-Al-Hoceima")
+#' plot(region$coordinates)
+#' #Use id
+#' region=getProvince(id=1) #Don't forget getRegion(id=1) not getRegion(1)
+#' plot(region$coordinates)
+#' }
 #' @export
 #'
 getProvince=function(n_region=NULL,id=NULL){
   path=getPathRegion(n_region,id)
-  data=jsonlite::read_json(utils::unzip(path[1],path[2]))
+  data=jsonlite::read_json(path)
   nbr_prov=length(data["Data"][[1]])
   libelle_ar=c()
   libelle_fr=c()
@@ -57,16 +56,15 @@ getProvince=function(n_region=NULL,id=NULL){
 #' @return return a sf object
 #'
 #' @examples
-#' #Examples of simple plots,
-#' ##Use region name
-#' ## Plot two regions :Casablanca-Settat and Rabat-Sale-Kenitra
-#' #regions=getMultiProvince(c("Casablanca-Settat","Rabat-Sale-Kenitra"))
-#' #plot(regions$coordinates)
-#' ##Use id
-#' ##Don't forget to write getMultiProvince(id=c(1,2)) not getMultiProvince(c(1,2))
-#' ##Plot provinces of Oriental and Tanger-Tetouan-AL-Hoceima
-#' #regions=getMultiProvince(id=c(1,2))
-#' #plot(regions$coordinates)
+#' \dontrun{
+#' # Plot two regions :Casablanca-Settat and Rabat-Sale-Kenitra
+#' regions=getMultiProvince(c("Casablanca-Settat","Rabat-Sale-Kenitra"))
+#' plot(regions$coordinates)
+#' #Plot provinces of Oriental and Tanger-Tetouan-AL-Hoceima
+#' regions=getMultiProvince(id=c(1,2))
+#' plot(regions$coordinates)
+#' }
+#'
 #' @export
 #'
 getMultiProvince=function(n_region=NULL,id=NULL){
@@ -92,16 +90,17 @@ getMultiProvince=function(n_region=NULL,id=NULL){
 #' @param id  id of region
 #'
 getPathRegion=function(n_region=NULL,id=NULL){
-  path=system.file("extdata", "extdata.zip", package = "geomaroc")
   if (is.null(n_region) & !is.null(id)){
     if (is.numeric(id)){
-      ids=jsonlite::read_json(utils::unzip(path,"region_id.json"))
+      path_p=system.file("extdata", "region_id.json", package = "geomarocdata")
+      ids=jsonlite::read_json(path_p)
       n_region=names(which(ids==id))}
     else {
       print("id must be an integer")
     }
   }
   short_path=paste("region/",n_region,".json",sep = "")
-  return(c(path,short_path))
+  path=system.file("extdata", short_path, package = "geomarocdata")
+  return(path)
 }
 

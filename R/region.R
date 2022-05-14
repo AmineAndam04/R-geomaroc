@@ -7,25 +7,24 @@
 #' @return return a sf object
 #'
 #' @examples
-#' ##Examples of simple plots,
-#' ##combine the output of this function with  data you want to visualize
-#' ##Use region name
-#' #region=getRegion("Tanger-Tetouan-Al-Hoceima")
-#' #region
+#' \dontrun{
+#'
+#' region=getRegion("Tanger-Tetouan-Al-Hoceima") #Use region name
 #' #plot(region$coordinates)
-#' ##Use id
-#' ##Don't forget to write getRegion(id=1) not getRegion(1)
-#' #region=getRegion(id=1)
-#' #plot(region$coordinates)
+#' region=getRegion(id=1) # use id
+#' plot(region$coordinates)
+#' }
+#'
 #' @export
 #'
 getRegion=function(name=NULL,id=NULL){
-  path=system.file("extdata", "extdata.zip", package = "geomaroc")
-  data=jsonlite::read_json(utils::unzip(path,"Maroc.json"))
+  path=system.file("extdata", "Maroc.json", package = "geomarocdata")
+  data=jsonlite::read_json(path)
   if (is.null(name) & !is.null(id)){
     if (is.numeric(id)){
-    ids=jsonlite::read_json(utils::unzip(path,"region_id.json"))
-    name=names(which(ids==id))}
+      path_p=system.file("extdata", "region_id.json", package = "geomarocdata")
+      ids=jsonlite::read_json(path_p)
+      name=names(which(ids==id))}
     else {
       print("id must be an integer")
       return(0)
@@ -52,16 +51,14 @@ getRegion=function(name=NULL,id=NULL){
 #' @return return a sf object
 #'
 #' @examples
-#' #Examples of simple plots,
-#' #Use region name
-#' ## Plot two regions :Casablanca-Settat and Laayoune-Sakia-El-Hamra
-#' #regions=getMultiRegion(c("Eddakhla-Oued-Eddahab","Laayoune-Sakia-El-Hamra"))
-#' #plot(regions$coordinates)
-#' ##Use id
-#' ##Don't forget to write getRegion(id=c(1,2)) not getRegion(c(1,2))
-#' ##Plot the map of Morocco
-#' #mar=getMultiRegion(id=1:12)
-#' #plot(mar$coordinates)
+#' \dontrun{
+#' #Plot two regions :Casablanca-Settat and Laayoune-Sakia-El-Hamra
+#' regions=getMultiRegion(c("Eddakhla-Oued-Eddahab","Laayoune-Sakia-El-Hamra"))
+#' plot(regions$coordinates)
+#' #Plot the map of Morocco
+#' mar=getMultiRegion(id=1:12)
+#' plot(mar$coordinates)
+#' }
 #' @export
 #'
 getMultiRegion=function(name=NULL,id=NULL){

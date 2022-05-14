@@ -7,19 +7,18 @@
 #' @return return a sf object
 #'
 #' @examples
-#' ##Examples of simple plots
-#' ##Use DISTRICT name
-#' #prov=getDistrict("Casablanca")
-#' #plot(prov$coordinates)
-#' ##Use id
-#' ##Don't forget to write getDistrict(id=1) not getDistrict(1)
-#' #prov=getDistrict(id=141)
-#' #plot(prov$coordinates)
-#'
+#' \dontrun{
+#' #Use DISTRICT name
+#' prov=getDistrict("Casablanca")
+#' plot(prov$coordinates)
+#' #Use id
+#' prov=getDistrict(id=141)
+#' plot(prov$coordinates)
+#' }
 #' @export
 getDistrict=function(n_province=NULL,id=NULL){
   path=getPathProvince(n_province,id)
-  data=jsonlite::read_json(utils::unzip(path[1],path[2]))
+  data=jsonlite::read_json(path)
   nbr_dist=length(data["Data"][[1]])
   prov_fr=c()
   prov_ar=c()
@@ -76,16 +75,12 @@ getDistrict=function(n_province=NULL,id=NULL){
 #' @return return a sf object
 #'
 #' @examples
-#' ##Examples of simple plots,
-#' ##Use region name
-#' ##Plot two provinces :Tanger-Assilah and Fahs-Anjra
-#' #prov=getMultiDistrict(c("Tanger-Assilah","Fahs-Anjra"))
-#' #plot(prov$coordinates)
-#' ##Use id
-#' ##Don't forget to write getMultiDistricts(id=c(1,2)) not getMultiDistricts(c(1,2))
-#' ##Plot provinces of Tanger-Assilah and Fahs-Anjra
-#' #prov=getMultiDistrict(id=c(227,511))
-#' #plot(prov$coordinates)
+#' \dontrun{
+#' prov=getMultiDistrict(c("Tanger-Assilah","Fahs-Anjra"))
+#' plot(prov$coordinates)
+#' prov=getMultiDistrict(id=c(227,511))
+#' plot(prov$coordinates)
+#' }
 #' @export
 getMultiDistrict=function(n_province=NULL,id=NULL){
   if(!is.null(n_province)){
@@ -112,18 +107,20 @@ getMultiDistrict=function(n_province=NULL,id=NULL){
 #' @param id  id of region
 #' @noRd
 getPathProvince=function(n_province=NULL,id=NULL){
-  path=system.file("extdata", "extdata.zip", package = "geomaroc")
   if (is.null(n_province) & !is.null(id)){
     if (is.numeric(id)){
-      ids=jsonlite::read_json(utils::unzip(path,"prov_id.json"))
+      path_p=system.file("extdata", "prov_id.json", package = "geomarocdata")
+      ids=jsonlite::read_json(path_p)
       n_province=names(which(ids==id))}
     else {
       print("id must be an integer")
     }
   }
-  n_region=jsonlite::read_json(utils::unzip(path,"prov_region.json"))[n_province][[1]]
+  path=system.file("extdata", "prov_region.json", package = "geomarocdata")
+  n_region=jsonlite::read_json(path)[n_province][[1]]
   short_path=paste(n_region,"/",n_province,".json",sep = "")
-  return(c(path,short_path))
+  path=system.file("extdata", short_path, package = "geomarocdata")
+  return(path)
 }
 
 
